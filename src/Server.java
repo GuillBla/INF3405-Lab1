@@ -2,6 +2,8 @@ import java.net.*;
 import java.io.*;
 import java.util.Scanner;
 
+import static java.lang.Integer.parseInt;
+
 public class Server {
     private static ServerSocket listener;
 
@@ -17,8 +19,15 @@ public class Server {
         }
     }
 
-    public static boolean isPortNumber(int port){
-        if (5000 <= port && port <= 5050){
+    public static boolean isPortNumber(String port){
+        Integer port_int;
+        // Make sure the string contains an integer
+        try{
+            port_int = parseInt(port);
+        }catch (NumberFormatException e) {
+            return false;
+        }
+        if (5000 <= port_int && port_int <= 5050){
             return true;
         }else{
             return false;
@@ -32,7 +41,7 @@ public class Server {
         int clientNumber = 1;
 
         // On attend qu'une addresse IPv4 correcte soit entrée
-        String serverAddress = "";
+        String serverAddress = " ";
         while (!isIPv4Address(serverAddress))
         {
             System.out.println("Please enter a correct IP address for the server to create :");
@@ -40,19 +49,18 @@ public class Server {
             Scanner myObj = new Scanner(System.in);
             serverAddress = myObj.nextLine();
         }
-
         System.out.println("Server address is : " + serverAddress);
 
         // On attend qu'un numéro de port correct soit entré
-
-        int serverPort = -1;
-        while (!isPortNumber(serverPort))
+        String serverPort_string = "";
+        while (!isPortNumber(serverPort_string))
         {
             System.out.println("Please enter a correct port for the server to create :");
             System.out.printf("Expected format : an integer between 5000 and 5050");
             Scanner myObj = new Scanner(System.in);
-            serverPort = myObj.nextInt();
+            serverPort_string = myObj.nextLine();
         }
+        int serverPort = Integer.valueOf(serverPort_string);
         System.out.println("Port number is : " + serverPort);
 
         // Création d'une connexion avec les clients
